@@ -1,5 +1,3 @@
-package ProblemaA;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -16,7 +14,8 @@ public class ProblemaA {
 				BufferedReader br = new BufferedReader(is);
 				) { 
 			String line = br.readLine();
-			while(line!=null && line.length()>0 && !"0".equals(line)) {
+			int cont = 0;
+			while(line!=null && line.length()>0 && !"0".equals(line) && cont<Integer.parseInt(line)) {
 				line = br.readLine();
 				final String [] dataStr = line.split(" ");
 				final int[] n = Arrays.stream(dataStr).mapToInt(f->Integer.parseInt(f)).toArray();
