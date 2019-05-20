@@ -18,10 +18,8 @@ public class ProblemaA {
 			String line = br.readLine();
 			while(line!=null && line.length()>0 && !"0".equals(line)) {
 				line = br.readLine();
-				final String [] dataStr = line.split(" ");
-				final int[] n = Arrays.stream(dataStr).mapToInt(f->Integer.parseInt(f)).toArray();
-				int rta = instancia.procesarNumeros(n);
-				System.out.println(rta);
+				int r = instancia.procesarNumeros(Arrays.stream(line.split(" ")).mapToInt(f->Integer.parseInt(f)).toArray());
+				System.out.println(r);
 				line = br.readLine();
 			}
 		}
@@ -38,7 +36,7 @@ public class ProblemaA {
 		int l = 0;
 		int i = 0;
 		int k = 1;
-		if(k == n.length)
+		if(k == n.length || i == 0)
 			return 1;
 		else
 		{
