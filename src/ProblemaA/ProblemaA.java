@@ -10,17 +10,16 @@ import java.util.Arrays;
  */
 public class ProblemaA {
 	public static void main(String[] args) throws Exception {
-		ProblemaA instancia = new ProblemaA();
+		ProblemaA ins = new ProblemaA();
 		try ( 
-				InputStreamReader is= new InputStreamReader(System.in);
-				BufferedReader br = new BufferedReader(is);
+				BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
 				) { 
-			String line = br.readLine();
-			while(line!=null && line.length()>0 && !"0".equals(line)) {
-				line = br.readLine();
-				int r = instancia.procesarNumeros(Arrays.stream(line.split(" ")).mapToInt(f->Integer.parseInt(f)).toArray());
+			String l = b.readLine();
+			while(l!=null && l.length()>0 && !"0".equals(l)) {
+				l = b.readLine();
+				int r = ins.procesarNumeros(Arrays.stream(l.split(" ")).mapToInt(f->Integer.parseInt(f)).toArray());
 				System.out.println(r);
-				line = br.readLine();
+				l = b.readLine();
 			}
 		}
 	}

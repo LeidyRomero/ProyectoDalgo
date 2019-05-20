@@ -14,57 +14,52 @@ public class ProblemaB {
 	public static void main(String[] args) throws Exception {
 		ProblemaB instancia = new ProblemaB();
 		try ( 
-				InputStreamReader is= new InputStreamReader(System.in);
-				BufferedReader br = new BufferedReader(is);
+				BufferedReader b = new BufferedReader(new InputStreamReader(System.in));
 				) { 
-			String line = br.readLine();
+			String l = b.readLine();
 
-			while(line!=null && line.length()>0 && !"0 0".equals(line)) {
-				int k = Integer.parseInt(line.split(" ")[1]);
-				int n = Integer.parseInt(line.split(" ")[0]);
-				int cont = 0;
-				int [][] matriz = new int[k-1][k-1];
-				while(cont<n)
+			while(l!=null && l.length()>0 && !"0 0".equals(l)) {
+				int k = Integer.parseInt(l.split(" ")[1]);
+				int n = Integer.parseInt(l.split(" ")[0]);
+				int [][] m = new int[n-1][n-1];
+				while(!"0 0".equals(l))
 				{
-					line = br.readLine();	
-					final String [] dataStr = line.split(" ");
-					final int[] a = Arrays.stream(dataStr).mapToInt(f->Integer.parseInt(f)).toArray();
+					l = b.readLine();	
+					final String [] dataStr = l.split(" ");
 					for(int j = 1;j<dataStr.length-1;j++)
 					{
-						matriz[Integer.parseInt(dataStr[0])-1][Integer.parseInt(dataStr[j])-1] = 1;
-						matriz[Integer.parseInt(dataStr[j])-1][Integer.parseInt(dataStr[0])-1] = 1;
+						m[Integer.parseInt(dataStr[0])-1][Integer.parseInt(dataStr[j])-1] = 1;
+						m[Integer.parseInt(dataStr[j])-1][Integer.parseInt(dataStr[0])-1] = 1;
 					}
-					cont++;
 				}
-				int rta = instancia.encontrarCiclos(matriz,n,k);
-				System.out.println(rta);
+				int r = instancia.encontrarCiclos(m,n,k);
+				System.out.println(r);
 			}
 		}
 	}
-	public int encontrarCiclos(int[][] matriz,int n, int k)
+	public int encontrarCiclos(int[][] m,int n, int k)
 	{
-		//DirectedCycle cyclefinder = new DirectedCycle(matriz,n,k);
-		boolean marked[] = new boolean[n]; 
+		boolean marcados[] = new boolean[n]; 
 
 		// Buscar un ciclo usando n-k+1 vertices
 		for (int i = 0; i < n - (k - 1); i++) { 
-			DFS(matriz, marked, k-1, i, i, n); 
+			DFS(m, marcados, k-1, i, i, n); 
 	
-			marked[i] = true; 
+			marcados[i] = true; 
 		} 
 		return count / 2;  
 	}
-	public void DFS(int graph[][], boolean marked[], int k, int vert, int start, int n) { 
+	public void DFS(int m[][], boolean marcados[], int k, int v, int s, int n) { 
 		
-		marked[vert] = true; 
+		marcados[v] = true; 
 
 		// Se encuentra un camino de longitud k-1
 		if (k == 0) { 
 			
-			marked[vert] = false; 
+			marcados[v] = false; 
 
 			// Revisa el final del ciclo con el inicio (si se conectan)
-			if (graph[vert][start] == 1) { 
+			if (m[v][s] == 1) { 
 				count++; 
 				return; 
 			}
@@ -73,11 +68,11 @@ public class ProblemaB {
 
 		// Fuerza bruta
 		for (int i = 0; i < n; i++) 
-			if (!marked[i] && graph[vert][i] == 1) 
+			if (!marcados[i] && m[v][i] == 1) 
 
 				// Recursion
-				DFS(graph, marked, k-1, i, start, n); 
+				DFS(m, marcados, k-1, i, s, n); 
 
-		marked[vert] = false; 
+		marcados[v] = false; 
 	} 
 }
