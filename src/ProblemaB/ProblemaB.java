@@ -47,7 +47,7 @@ public class ProblemaB {
 	
 			marcados[i] = true; 
 		} 
-		return count / 2;  
+		return count / 2; //TODO revisar porque divide en 2 
 	}
 	public void DFS(int m[][], boolean marcados[], int k, int v, int s, int n) { 
 		
