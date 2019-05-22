@@ -7,8 +7,8 @@ import java.util.Arrays;
  * @author nuclode
  */
 public class ProblemaB {
-	int count = 0; 
-	
+	public static int count = 0; 
+
 	public static void main(String[] args) throws Exception {
 		ProblemaB instancia = new ProblemaB();
 		try ( 
@@ -17,21 +17,27 @@ public class ProblemaB {
 			String l = b.readLine();
 
 			while(l!=null && l.length()>0 && !"0 0".equals(l)) {
+				count = 0;
 				int k = Integer.parseInt(l.split(" ")[1]);
 				int n = Integer.parseInt(l.split(" ")[0]);
-				int [][] m = new int[n-1][n-1];
-				while(!"0 0".equals(l))
+
+				int [][] m = new int[n][n];
+				int c = 0;
+				while(c<n)
 				{
-					l = b.readLine();	
+					l = b.readLine();
+
 					final String [] dataStr = l.split(" ");
-					for(int j = 1;j<dataStr.length-1;j++)
+					for(int j = 1;j<dataStr.length;j++)
 					{
 						m[Integer.parseInt(dataStr[0])-1][Integer.parseInt(dataStr[j])-1] = 1;
 						m[Integer.parseInt(dataStr[j])-1][Integer.parseInt(dataStr[0])-1] = 1;
 					}
+					c++;
 				}
 				int r = instancia.encontrarCiclos(m,n,k);
 				System.out.println(r);
+				l = b.readLine();
 			}
 		}
 	}
@@ -42,18 +48,18 @@ public class ProblemaB {
 		// Buscar un ciclo usando n-k+1 vertices
 		for (int i = 0; i < n - (k - 1); i++) { 
 			DFS(m, marcados, k-1, i, i, n); 
-	
+
 			marcados[i] = true; 
 		} 
-		return count / 2;  
+		return count / 2; //TODO revisar porque divide en 2 
 	}
 	public void DFS(int m[][], boolean marcados[], int k, int v, int s, int n) { 
-		
+
 		marcados[v] = true; 
 
 		// Se encuentra un camino de longitud k-1
 		if (k == 0) { 
-			
+
 			marcados[v] = false; 
 
 			// Revisa el final del ciclo con el inicio (si se conectan)

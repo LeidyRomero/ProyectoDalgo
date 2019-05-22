@@ -33,7 +33,7 @@ public class ProblemaA {
 		int l = 0;
 		int i = 0;
 		int k = 1;
-		if(k == n.length || i == 0)
+		if(k == n.length)
 			return 1;
 		else
 		{
