@@ -10,27 +10,57 @@ public class ProblemaC {
 	//Input data
 		private int totalValue;
 		private int [] denominations;
-
+		/**
+		 * Se refiere a la suma total de ganancia que podemos recoger si tenemos recursos para 
+		 * hacer todas las actividades 
+		 */
+		private int sumaTotal;
+		/**
+		 * Se trata de la actividad de menor valor que hay y usaremos para disminuir el valor 
+		 * al problema de desición asociado.
+		 */
+		private int menorValor;
+		/**
+		 * Se trata de la cantidad de equipos de trabajo que tengo para
+		 * hacer los servicios que me llegan. 
+		 */
+		private int k;
 		public int[] calculateOptimalChange(int totalValue, int[] denominations) {
 			//Input data is saved as class attributes to avoid passing the parameters through the different methods
 			this.totalValue = totalValue;
 			this.denominations = denominations;
 			//To limit the number of solutions that will be compared in the cycle below
 			//the suboptimal solution provided the greedy algorithm would be used as upper bound 
+			// en este Caso escojeremos la suma de los valores del problema que recogimos al momento de leer el archivo.
 			int [] greedySol = new CoinChangeGreedy().calculateOptimalChange(totalValue, denominations);
 			CoinChangeState opt = new CoinChangeState(greedySol); 
 			int maxCoins = opt.getTotalCoins()-1;
-			int minCoins = 0;
-			while(minCoins<maxCoins) {
-				int boundNumberOfCoins = (minCoins+maxCoins)/2;
-				//Call of the graph exploration algorithm to find feasible solutions
-				CoinChangeState solution = findFeasibleSolution(boundNumberOfCoins);
-				if(solution==null) {
-					minCoins = boundNumberOfCoins+1;
-				} else {
-					opt = solution;
-					maxCoins = boundNumberOfCoins-1;
+			int maxGanancia = 0;
+			// acá inicializaría k con el valor que leo del string
+			k=0;
+			// Necesito dos ciclos:
+			// El primero sería por la cantidad de equipos de trabajo que tengo 
+			int equActual = 0;
+			while (equActual < k)
+			{
+				// El segundo que buscaría una solución para el equipo con el que estoy trabajando. 
+				// En el peor de los casos un equipo al menos podría hacer solo un servicio
+				// por lo que eso estará en el while
+				boolean solucion = false;
+				while(!solucion) {
+					int boundNumberOfCoins = (maxGanancia+maxCoins)/2;
+					//Llamamos a aver si encontramos solución con el valor que tenmos. 
+					CoinChangeState solution = findFeasibleSolution(boundNumberOfCoins);
+					//Si no tenemos solución restamos el valor minimo de valores que nos llegó del archivo
+					if(solution==null) {
+						maxGanancia = boundNumberOfCoins+1;
+					} else {
+					// Si tenemos solución terminamos la busqueda, marco los grafos y sigo con el siguiente grupo de trabajo	
+						opt = solution;
+						solucion = true;
+					}
 				}
+				k++;
 			}
 			return opt.getCoins();
 		}
