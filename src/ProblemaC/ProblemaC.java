@@ -8,8 +8,7 @@ import java.util.Queue;
 
 public class ProblemaC {
 	//Input data
-		private int totalValue;
-		private int [] denominations;
+		static private int[][] mA;
 		/**
 		 * Se refiere a la suma total de ganancia que podemos recoger si tenemos recursos para 
 		 * hacer todas las actividades 
@@ -26,16 +25,7 @@ public class ProblemaC {
 		 */
 		private int k;
 		public int[] calculateOptimalChange(int totalValue, int[] denominations) {
-			//Input data is saved as class attributes to avoid passing the parameters through the different methods
-			this.totalValue = totalValue;
-			this.denominations = denominations;
-			//To limit the number of solutions that will be compared in the cycle below
-			//the suboptimal solution provided the greedy algorithm would be used as upper bound 
-			// en este Caso escojeremos la suma de los valores del problema que recogimos al momento de leer el archivo.
-			int [] greedySol = new CoinChangeGreedy().calculateOptimalChange(totalValue, denominations);
-			CoinChangeState opt = new CoinChangeState(greedySol); 
-			int maxCoins = opt.getTotalCoins()-1;
-			int maxGanancia = 0;
+
 			// acá inicializaría k con el valor que leo del string
 			k=0;
 			// Necesito dos ciclos:
@@ -50,7 +40,7 @@ public class ProblemaC {
 				while(!solucion) {
 					int boundNumberOfCoins = (maxGanancia+maxCoins)/2;
 					//Llamamos a aver si encontramos solución con el valor que tenmos. 
-					CoinChangeState solution = findFeasibleSolution(boundNumberOfCoins);
+					subconjunto solution = findFeasibleSolution(boundNumberOfCoins);
 					//Si no tenemos solución restamos el valor minimo de valores que nos llegó del archivo
 					if(solution==null) {
 						maxGanancia = boundNumberOfCoins+1;
@@ -62,27 +52,27 @@ public class ProblemaC {
 				}
 				k++;
 			}
-			return opt.getCoins();
+			return opt.darServicios();
 		}
 
-		private CoinChangeState findFeasibleSolution(int boundNumberOfCoins) {
-			CoinChangeState answer = null;
+		private subconjunto findFeasibleSolution(int boundNumberOfCoins) {
+			subconjunto answer = null;
 			//Initial state
 			int [] coins = new int [denominations.length];
 			Arrays.fill(coins, 0);
-			CoinChangeState state = new CoinChangeState(coins);
+			subconjunto state = new subconjunto(coins);
 			//Agenda
-			Queue<CoinChangeState> agenda = new LinkedList<>();
+			Queue<subconjunto> agenda = new LinkedList<>();
 			agenda.add(state);
 			while(agenda.size()>0 && answer == null) {
 				//Choose next state from the agenda
 				state = agenda.poll();
 				if(isViable(state)) {
-					if(isSolution(state,boundNumberOfCoins)) {
+					if(satisfacibilidad(state,boundNumberOfCoins)) {
 						answer = state;
 					} else {
 						//Add successors to the agenda
-						List<CoinChangeState> successors = getSuccessors (state);
+						List<subconjunto> successors = sucesores (state);
 						agenda.addAll(successors);
 					}
 				}
@@ -95,14 +85,14 @@ public class ProblemaC {
 		 * @param state source state to define successors
 		 * @return List<CoinChangeState> successors of the given state
 		 */
-		private List<CoinChangeState> getSuccessors(CoinChangeState state) {
-			int [] coins = Arrays.copyOf(state.getCoins(), state.getCoins().length);
-			List<CoinChangeState> successors = new ArrayList<>(coins.length);
-			for(int i=0;i<coins.length;i++) {
-				coins[i]++;
-				CoinChangeState suc = new CoinChangeState(coins);
+		private List<subconjunto> sucesores(subconjunto state) {
+			int [] s = Arrays.copyOf(state.darServicios(), state.darServicios().length);
+			List<subconjunto> successors = new ArrayList<>(s.length);
+			for(int i=0;i<s.length;i++) {
+				s[i]++;
+				subconjunto suc = new subconjunto(s);
 				successors.add(suc);
-				coins[i]--;
+				s[i]--;
 			}
 			return successors;
 		}
@@ -112,91 +102,58 @@ public class ProblemaC {
 		 * @param state that will be checked for viability. 
 		 * @return boolean true if the total value of the given state is less or equal than the value to be completed
 		 */
-		private boolean isViable(CoinChangeState state) {
-			return getTotalValue(state) <= totalValue;
+		private boolean isViable(subconjunto state) {
+			return true;//TODO
 		}
 
 		/**
 		 * Determines if the given state is a solution. Implements the satisfiability predicate of the
 		 * graph exploration algorithm
 		 * @param state that will be checked
-		 * @param boundNumberOfCoins Maximum number of coins allowed
+		 * @param cota Maximum number of coins allowed
 		 * @return boolean true if the total value of the given state is equal to the value to be completed
 		 */
-		private boolean isSolution(CoinChangeState state, int boundNumberOfCoins) {
-			return getTotalValue(state) == totalValue && state.getTotalCoins()<=boundNumberOfCoins;
+		private boolean satisfacibilidad(subconjunto state, int cota) {
+			return state.darGananciasTotales(mA)>=cota && cruce();
 		}
-		/**
-		 * Calculates the total value of the given state taking into account the denominations
-		 * @param state 
-		 * @return
-		 */
-		private int getTotalValue(CoinChangeState state) {
-			int [] coins = state.getCoins();
-			int total = 0;
-			for(int i=0;i<coins.length;i++) {
-				total += coins[i]*denominations[i];
-			}
-			return total;
-		}
-
-	}
-	/**
-	 * Clase que modela VORAZ: DIVISION
-	 * @author David Hernandez y Leidy Romero
-	 */
-	class CoinChangeGreedy {
-		private int[] monedas;
-
-		public int[] calculateOptimalChange(int totalValue, int[] denominations) {
-			monedas = new int[denominations.length];
-			calculate(denominations.length, totalValue, denominations);
-			return monedas;
-		}
-		public void calculate(int i, int j, int[] denominaciones)
+		private boolean cruce()
 		{
-			while(i>=0)
-			{
-				if(denominaciones[i]<=j)
-				{
-					monedas[i] = j/denominaciones[i];
-					j-=monedas[i]*denominaciones[i];
-				}
-				i--;
-			}
+			//TODO
+			return true;
 		}
 	}
 	/**
-	 * An specific state for the graph exploration defined as a number of coins for each denomination
-	 * @author Jorge Duitama
+	 *
+	 * @author Leidy Romero y David Saavedra
 	 */
-	class CoinChangeState {
-		int[] coins;
+	class subconjunto {
+		int[] servicios;
 
 		/**
 		 * Creates a new state with the given configuration of coins
-		 * @param coins Number of coins of each denomination.
+		 * @param s Number of coins of each denomination.
 		 * This array is copied internally to allow posterior modifications
 		 */
-		public CoinChangeState(int[] coins) {
-			this.coins = Arrays.copyOf(coins, coins.length);
+		public subconjunto(int[] s) {
+			this.servicios = Arrays.copyOf(s, s.length);
 		}
 		/**
 		 * Calculates the total number of coins in this state
 		 * @return in Sum of the coins of each denomination
 		 */
-		public int getTotalCoins () {
-			int sum = 0;
-			for(int i=0;i<coins.length;i++) {
-				sum+=coins[i];
+		public int darGananciasTotales (int[][] mA) {
+			int s = 0;
+			
+			for(int i=0;i<servicios.length;i++) {
+				s+=mA[servicios[i]][3];
 			}
-			return sum;
+			return s;
 		}
 		/**
 		 * Returns the number of coins of each denomination
 		 * @return int [] number of coins of each denomination. The array is returned as is
 		 */
-		public int[] getCoins() {
-			return coins;
+		public int[] darServicios() {
+			return servicios;
 		}
 }
