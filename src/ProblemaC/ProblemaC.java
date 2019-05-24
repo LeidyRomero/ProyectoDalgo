@@ -115,13 +115,13 @@ public class ProblemaC {
 					// sumo a la ganancia máxima y sigo con el siguiente grupo de trabajo	
 					//ME
 					// Falta marcar los servicios que ya hice 
-					
-					gananciaMaxima += solution.darGananciasTotales(mA);
+					int gananciaParcial = solution.darGananciasTotales(mA);
+					gananciaMaxima += gananciaParcial;
 					for (int i : solution.darServicios()) {
 						serTomados.add(i);
 					}
 					solucion = true;
-					cota = gananciaIdeal;
+					cota = gananciaParcial;
 				}
 			}
 			equActual++;
