@@ -24,8 +24,12 @@ public class ProblemaA {
 		}
 	}
 	/**
-	 * Retorna la longitud del segmento mas largo de numeros menores o iguales al valor absoluto del mayor valor del arreglo.
-
+	 * Retorna la longitud del segmento mas largo de numeros menores o iguales al valor absoluto del mayor valor del arreglo
+	 * m: maximo mas hacia la derecha del arreglo encontrado
+	 * m2: segundo maximo mas hacia la derecha encontrado
+	 * l: longitud del segmento más grande encontrado
+	 * k: posicion que solo varia cuando encuentro algun numero que no sea menor o igual a m
+	 * i: posicion variables para cada iteracion
 	 * @param n arreglo de numeros a revisar
 	 * @return l longitud del segmento mas largo de numeros ascendentes del arreglo n
 	 */
@@ -35,25 +39,23 @@ public class ProblemaA {
 		int i = k-1;
 		int m = Math.abs(n[k]);
 		int m2 = Math.abs(n[i]);
-		int p2 = i;
+
 		while(0<=i){
-			
+
 			if(n[i]<=m && (k-i+1)>l)
 			{
 				l = k-i+1;
 				if(Math.abs(n[i])>m2)
-				{
 					m2 = Math.abs(n[i]);
-					p2 = i;
-				}
 			}
 			else if(n[i] > m) 
 			{
 				k--;
 				i = k;
-				m = Math.abs(n[k]);//TODO revisar
+				if(n[k]>m)
+					m = Math.abs(n[k]);
 			}
-			
+
 			i--;
 		}
 		return l;
