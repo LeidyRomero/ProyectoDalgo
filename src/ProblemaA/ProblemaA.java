@@ -34,7 +34,7 @@ public class ProblemaA {
 		int k = n.length-1;
 		int i = k-1;
 		int m = Math.abs(n[k]);
-		int m2 = n[i];
+		int m2 = Math.abs(n[i]);
 		int p2 = i;
 		while(0<=i){
 			
@@ -51,7 +51,7 @@ public class ProblemaA {
 			{
 				k--;
 				i = k;
-				m = n[k];//TODO revisar
+				m = Math.abs(n[k]);//TODO revisar
 			}
 			
 			i--;
