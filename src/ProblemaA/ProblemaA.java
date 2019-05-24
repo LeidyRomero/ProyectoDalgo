@@ -25,30 +25,36 @@ public class ProblemaA {
 	}
 	/**
 	 * Retorna la longitud del segmento mas largo de numeros menores o iguales al valor absoluto del mayor valor del arreglo.
-	 * l: longitud segmento mas largo
-	 * k: Posicion que cambia siempre en el arreglo
-	 * i: Posicion que cambia siempre que se encuentre un nuevo segmento
+
 	 * @param n arreglo de numeros a revisar
 	 * @return l longitud del segmento mas largo de numeros ascendentes del arreglo n
 	 */
 	public int procesarNumeros(int[] n) {
-		int l = 0;
-		int i = 0;
-		int k = 1;
-		if(k == n.length || i == 0)
-			return 1;
-		else
-		{
-			while(k<n.length){
-				if(n[k]<0) n[k] = n[k]*-1;
-
-				if (n[k-1] <= n[k] && (k-i+1)>l)
-					l=k-i+1;
-				else if(n[k-1] > n[k])
-					i = k;
-
-				k = k+1;
+		int l = 1;
+		int k = n.length-1;
+		int i = k-1;
+		int m = Math.abs(n[k]);
+		int m2 = n[i];
+		int p2 = i;
+		while(0<=i){
+			
+			if(n[i]<=m && (k-i+1)>l)
+			{
+				l = k-i+1;
+				if(Math.abs(n[i])>m2)
+				{
+					m2 = Math.abs(n[i]);
+					p2 = i;
+				}
 			}
+			else if(n[i] > m) 
+			{
+				k--;
+				i = k;
+				m = n[k];//TODO revisar
+			}
+			
+			i--;
 		}
 		return l;
 	}
